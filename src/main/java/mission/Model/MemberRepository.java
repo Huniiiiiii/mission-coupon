@@ -1,9 +1,7 @@
 package mission.Model;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class MemberRepository {
     private final Map<String, Member> members = new HashMap<>();
@@ -12,23 +10,17 @@ public class MemberRepository {
         members.put(member.getPhone(), member);
     }
 
-    public Member findByPhoneSuffix(String suffix) {
-        for (Member member : members.values()) {
-            if (member.getPhone().endsWith(suffix)) {
-                return member;
-            }
-        }
-        return null;
+    public Member findFirstByPhoneSuffix(String suffix) {
+        return members.values().stream()
+                .filter(m -> m.getPhone().endsWith(suffix))
+                .findFirst()
+                .orElse(null);
     }
 
     public List<Member> findAllByPhoneSuffix(String suffix) {
-        List<Member> result = new ArrayList<>();
-        for (Member member : members.values()) {
-            if (member.getPhone().endsWith(suffix)) {
-                result.add(member);
-            }
-        }
-        return result;
+        return members.values().stream()
+                .filter(m -> m.getPhone().endsWith(suffix))
+                .collect(Collectors.toList());
     }
 
     public boolean exists(String phone) {
